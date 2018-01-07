@@ -9,18 +9,8 @@ class Solution {
 public:
     int numDistLE(const vector<int>& nums, int d) {
         int nd = 0;
-        for (auto it = nums.cbegin(); it != nums.cend(); ++it) {
-            int target = *it + d;
-            auto beg = it + 1, end = nums.cend();
-            while (beg != end) {
-                auto mid = beg + (end - beg) / 2;
-                if (*mid > target)
-                    end = mid;
-                else
-                    beg = mid + 1;
-            }
-            nd += static_cast<int>(beg - it - 1);
-        }
+        for (auto it = nums.cbegin(); it != nums.cend(); ++it)
+            nd += upper_bound(it + 1, nums.cend(), *it + d) - it - 1;
         return nd;
     }
 
