@@ -7,15 +7,7 @@ using std::vector;
 class Solution {
 public:
     int searchInsert(vector<int>& nums, int target) {
-        auto beg = nums.cbegin(), end = nums.cend();
-        while (beg != end) {
-            auto mid = beg + (end - beg) / 2;
-            if (*mid < target)
-                beg = mid + 1;
-            else
-                end = mid;
-        }
-        return beg - nums.cbegin();
+        return lower_bound(nums.cbegin(), nums.cend(), target) - nums.cbegin();
     }
 };
 
