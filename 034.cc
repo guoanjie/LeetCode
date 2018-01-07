@@ -7,22 +7,15 @@ using std::vector;
 class Solution {
 public:
     vector<int> searchRange(vector<int>& nums, int target) {
-        vector<int> range;
-        for (auto i : {0, 1}) {
-            auto beg = nums.cbegin(), end = nums.cend();
-            while(beg != end) {
-                auto mid = beg + (end - beg) / 2;
-                if ((*mid > target) || (i == 0 && *mid == target))
-                    end = mid;
-                else
-                    beg = mid + 1;
-            }
-            range.push_back(static_cast<int>(beg - nums.cbegin()) - i);
-        }
-        if (range[0] > range[1])
+        auto lower = lower_bound(nums.cbegin(), nums.cend(), target);
+        auto upper = upper_bound(nums.cbegin(), nums.cend(), target);
+        if (lower == upper)
             return {-1, -1};
         else
-            return range;
+            return {
+                static_cast<int>(lower - nums.cbegin()),
+                static_cast<int>(upper - nums.cbegin()) - 1
+            };
     }
 };
 
