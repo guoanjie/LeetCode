@@ -1,27 +1,21 @@
 #include <iostream>
-#include <limits>
 #include <vector>
 using std::cout;
 using std::endl;
-using std::numeric_limits;
 using std::vector;
 
 class Solution {
 public:
     int findPeakElement(vector<int>& nums) {
-        nums.insert(nums.cbegin(), numeric_limits<int>::min());
-        nums.push_back(numeric_limits<int>::min());
-        auto beg = nums.cbegin(), end = nums.cend();
+        auto beg = nums.cbegin(), end = nums.cend() - 1;
         while (beg != end) {
             auto mid = beg + (end - beg) / 2;
-            if (*mid < *(mid - 1))
-                end = mid;
-            else if (*mid < *(mid + 1))
-                beg = mid;
+            if (*mid < *(mid + 1))
+                beg = mid + 1;
             else
-                return mid - nums.cbegin() - 1;
+                end = mid;
         }
-        return -1;
+        return beg - nums.cbegin();
     }
 };
 
