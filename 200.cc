@@ -48,8 +48,38 @@ private:
     }
 };
 
+class SolutionDFS {
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        if (grid.size() == 0 || grid[0].size() == 0)
+            return 0;
+        int num = 0, n = grid.size(), m = grid[0].size();
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == '1') {
+                    ++num;
+                    dfs(grid, i, j, n, m);
+                }
+            }
+        }
+        return num;
+    }
+private:
+    const vector<vector<int>> dirs = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
+    void dfs(vector<vector<char>>& grid, int i, int j, int n, int m) {
+        grid[i][j] = '0';
+        for (auto dir : dirs) {
+            int i_ = i + dir[0], j_ = j + dir[1];
+            if (i_ < 0 || i_ >= n || j_ < 0 || j_ >= m)
+                continue;
+            if (grid[i_][j_] == '1')
+                dfs(grid, i_, j_, n, m);
+        }
+    }
+};
+
 int main() {
-    SolutionBFS solution;
+    SolutionDFS solution;
     vector<vector<char>> grid1 = {
         {'1', '1', '1', '1', '0'},
         {'1', '1', '0', '1', '0'},
