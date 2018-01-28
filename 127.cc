@@ -2,12 +2,9 @@
 #include <queue>
 #include <string>
 #include <unordered_set>
-#include <utility>
 #include <vector>
 using std::cout;
 using std::endl;
-using std::make_pair;
-using std::pair;
 using std::queue;
 using std::string;
 using std::unordered_set;
@@ -16,35 +13,34 @@ using std::vector;
 class Solution {
 public:
     int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        queue<pair<string, int>> words;
-        vector<bool> used(wordList.size(), false);
-        words.push(make_pair(beginWord, 1));
-        while (!words.empty()) {
-            auto curr = words.front();
-            words.pop();
-            for (size_t i = 0; i < wordList.size(); ++i) {
-                if (used[i])
-                    continue;
-                if (canTransform(curr.first, wordList[i])) {
-                    if (wordList[i] == endWord)
-                        return curr.second + 1;
-                    words.push(make_pair(wordList[i], curr.second + 1));
-                    used[i] = true;
+        unordered_set<string> wordSet(wordList.cbegin(), wordList.cend());
+        unordered_set<string> visited;
+        queue<string> que;
+        que.push(beginWord);
+        visited.insert(beginWord);
+        int length = 1;
+        while (!que.empty()) {
+            queue<string> q;
+            while (!que.empty()) {
+                string word = que.front();
+                que.pop();
+                if (word == endWord)
+                    return length;
+                for (size_t pos = 0; pos < word.size(); ++pos) {
+                    string trans = word;
+                    for (char c = 'a'; c <= 'z'; ++c) {
+                        trans[pos] = c;
+                        if (visited.find(trans) == visited.end() && wordSet.find(trans) != wordSet.end()) {
+                            visited.insert(trans);
+                            q.push(trans);
+                        }
+                    }
                 }
             }
+            que = q;
+            ++length;
         }
         return 0;
-    }
-private:
-    bool canTransform(string beginWord, string endWord) {
-        int count = 0;
-        for (int i = 0; i < beginWord.size(); ++i) {
-            if (beginWord[i] != endWord[i])
-                ++count;
-            if (count > 1)
-                return false;
-        }
-        return count == 1;
     }
 };
 
