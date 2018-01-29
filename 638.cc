@@ -12,19 +12,22 @@ using std::vector;
 class Solution {
 public:
     int shoppingOffers(vector<int>& price, vector<vector<int>>& special, vector<int>& needs) {
-        int lowest = inner_product(price.cbegin(), price.cend(), needs.cbegin(), 0);
-        if (special.size() == 0)
-            return lowest;
-        vector<int> offer = special.back();
+        return shoppingOffers(price, special, needs, special.size());
+    }
+private:
+    int shoppingOffers(vector<int>& price, vector<vector<int>>& special, vector<int>& needs, size_t sz) {
+        if (sz == 0)
+            return inner_product(price.cbegin(), price.cend(), needs.cbegin(), 0);
+        vector<int> &offer = special[sz - 1];
         int numOffers = numeric_limits<int>::max();
         for (size_t i = 0; i < needs.size(); ++i) {
-            if (offer[i] != 0)
+            if (offer[i] > 0)
                 numOffers = min(numOffers, needs[i] / offer[i]);
         }
-        vector<vector<int>> special_(special.cbegin(), special.cend() - 1);
         vector<int> needs_(needs.cbegin(), needs.cend());
+        int lowest = numeric_limits<int>::max();
         for (int n = 0; n <= numOffers; ++n) {
-            lowest = min(lowest, offer.back() * n + shoppingOffers(price, special_, needs_));
+            lowest = min(lowest, offer.back() * n + shoppingOffers(price, special, needs_, sz - 1));
             for (size_t i = 0; i < needs.size(); ++i)
                 needs_[i] -= offer[i];
         }
