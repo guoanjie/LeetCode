@@ -1,45 +1,30 @@
+#include <algorithm>
 #include <iostream>
-#include <unordered_map>
 #include <vector>
 using std::cout;
 using std::endl;
-using std::unordered_map;
+using std::sort;
 using std::vector;
 
 class Solution {
 public:
     vector<vector<int>> subsetsWithDup(vector<int>& nums) {
-        unordered_map<int, int> counter;
-        for(auto num : nums)
-            ++counter[num];
-        auto counters = subcounters(counter);
+        sort(nums.begin(), nums.end());
         vector<vector<int>> subsets;
-        for(const auto &counter : counters) {
-            vector<int> subset;
-            for(auto it = counter.cbegin(); it != counter.cend(); ++it) {
-                for(int i = 0; i < it->second; ++i)
-                    subset.push_back(it->first);
-            }
-            subsets.push_back(subset);
-        }
+        vector<int> subset;
+        dfs(nums, 0, subset, subsets);
         return subsets;
     }
 private:
-    vector<unordered_map<int, int>> subcounters(unordered_map<int, int> counter) {
-        if(counter.empty())
-            return {counter};
-        vector<unordered_map<int, int>> counters;
-        auto beg = counter.begin();
-        int num = beg->first, count = beg->second;
-        counter.erase(beg);
-        for(const auto &sc : subcounters(counter)) {
-            for(int i = 0; i <= count; ++i) {
-                auto c = sc;
-                c[num] = i;
-                counters.push_back(c);
-            }
+    void dfs(const vector<int>& nums, size_t pos, vector<int> &subset, vector<vector<int>>& subsets) {
+        subsets.push_back(vector<int>(subset));
+        for(size_t i = pos; i < nums.size(); ++i) {
+            if(i > pos && nums[i] == nums[i-1])
+                continue;
+            subset.push_back(nums[i]);
+            dfs(nums, i + 1, subset, subsets);
+            subset.pop_back();
         }
-        return counters;
     }
 };
 
