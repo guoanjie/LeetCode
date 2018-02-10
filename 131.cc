@@ -9,26 +9,28 @@ using std::vector;
 class Solution {
 public:
     vector<vector<string>> partition(string s) {
-        if (s.length() == 0)    return {{}};
-        if (s.length() == 1)    return {{s}};
         vector<vector<string>> partitions;
-        for (size_t pos = 0; pos < s.length(); ++pos) {
-            string sub = s.substr(pos);
-            if (!palindrome(sub))   continue;
-            auto ps = partition(s.substr(0, pos));
-            for (auto &p : ps) {
-                p.push_back(sub);
-                partitions.push_back(p);
-            }
-        }
+        vector<string> path;
+        dfs(s.cbegin(), s.cend(), partitions, path);
         return partitions;
     }
 private:
-    bool palindrome(string s) {
-        for (size_t i = 0, j = s.length() - 1; i < j; ++i, --j) {
-            if (s[i] != s[j])
-                return false;
+    void dfs(
+            string::const_iterator beg, string::const_iterator end,
+            vector<vector<string>> &partitions, vector<string> &path) {
+        if (beg == end) partitions.push_back(path);
+        for (auto it = beg; it != end; ++it) {
+            if (palindrome(beg, it + 1)) {
+                path.push_back(string(beg, it + 1));
+                dfs(it + 1, end, partitions, path);
+                path.pop_back();
+            }
         }
+    }
+    bool palindrome(string::const_iterator beg, string::const_iterator end) {
+        if (beg == end) return true;
+        for (--end; beg < end; ++beg, --end)
+            if (*beg != *end)   return false;
         return true;
     }
 };
