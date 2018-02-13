@@ -1,13 +1,15 @@
-#include <cmath>
 #include <iostream>
 using std::cout;
 using std::endl;
-using std::pow;
 
 class Solution {
 public:
     double myPow(double x, int n) {
-        return pow(x, n);
+        if (n < 0)  return myPow(1.0 / x, -(n + 1)) / x;
+        if (n == 0) return 1.0;
+        double p = myPow(x, n >> 1);
+        if (n & 1)  return p * p * x;
+        else    return p * p;
     }
 };
 
