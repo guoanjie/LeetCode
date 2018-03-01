@@ -7,15 +7,13 @@ using std::vector;
 class Solution {
 public:
     int totalHammingDistance(vector<int>& nums) {
-        vector<int> bits(30, 0);
-        for (auto num : nums) {
-            for (int i = 0; num > 0; i++) {
-                if (num & 1)    ++bits[i];
-                num >>= 1;
-            }
-        }
         int total = 0;
-        for (auto bit : bits)   total += bit * (nums.size() - bit);
+        for (int i = 0; i < 30; ++i) {
+            int bits = 0, mask = 1 << i;
+            for (auto num : nums)
+                if (num & mask) ++bits;
+            total += bits * (nums.size() - bits);
+        }
         return total;
     }
 };
