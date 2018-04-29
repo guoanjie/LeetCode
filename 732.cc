@@ -12,7 +12,7 @@ public:
     }
     
     int book(int start, int end) {
-        auto it = events.upper_bound(start); --it;
+        auto it = events.upper_bound(start);    --it;
         events[start] = it->second;
         it = events.upper_bound(end);   --it;
         events[end] = it->second;
